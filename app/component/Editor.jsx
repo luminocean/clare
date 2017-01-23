@@ -1,12 +1,34 @@
 import React from 'react'
+import CodeMirror from 'react-codemirror'
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/mode/javascript/javascript'
 import './Editor.scss'
 
 export default class Editor extends React.Component{
-    render(){
-        return (
-            <div className="clare-editor">
-                Hihihihiiiihi
-            </div>
-        );
+    constructor(props){
+        super(props);
+
+        this.state = {
+            code: "// Code Here...",
+            options: {
+                lineNumbers: true,
+                mode: "javascript"
+            }
+        };
+    }
+
+    updateCode(newCode) {
+        this.setState({
+            code: newCode,
+        });
+    }
+
+    render() {
+        this.state.codeMirror = <CodeMirror
+            value={this.state.code}
+            onChange={this.updateCode.bind(this)}
+            options={this.state.options} />;
+
+        return this.state.codeMirror;
     }
 }
