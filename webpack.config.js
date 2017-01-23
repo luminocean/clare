@@ -15,23 +15,19 @@ const PATHS = {
     nodeModules: path.join(__dirname, 'node_modules')
 };
 
-const HtmlWebpackMinifyOption = {
-    removeComments: true,
-    collapseWhitespace: true,
-    removeRedundantAttributes: true,
-    useShortDoctype: true,
-    removeEmptyAttributes: true,
-    removeStyleLinkTypeAttributes: true,
-    keepClosingSlash: true,
-    minifyJS: true,
-    minifyCSS: true,
-    minifyURLs: true
-};
-
 // some dependencies that go with client js scripts
 const clientScriptDeps = stageIs('start')? [
     require.resolve('react-dev-utils/webpackHotDevClient')
 ]:[];
+
+const htmlWebpackPluginOption = {
+    // injected file name
+    filename: 'index.html',
+    // chunks (defined in entry) you want to inject them into the template file
+    chunks: ['index'],
+    template: PATHS.public + '/index.html',
+    // favicon: PATHS.public + '/favicon.ico',
+};
 
 const common = {
     // supports multiple bundles
@@ -45,8 +41,9 @@ const common = {
         // append hash only in production
         filename: `static/js/[name]${stageIs('build')?'.[hash:8]':''}.js`,
         chunkFilename: `static/js/[name]${stageIs('build')?'.[chunkhash:8]':''}.chunk.js`,
-        // // this will be the prefix of the file name above whose default is ''
-        // publicPath: '/',
+        // this will be the prefix of the file name above whose default is ''
+        // it should be the same with where you put built assets on production server
+        publicPath: '',
     },
     // extension sequence used to resolve modules
     resolve: {
@@ -95,20 +92,7 @@ const common = {
                 }
             }
         ]
-    },
-    plugins: [
-        // read the template html files, inject bundles from entries
-        // and write the injected html files into output directory
-        new HtmlWebpackPlugin({
-            // injected file name
-            filename: 'index.html',
-            // chunks (defined in entry) you want to inject them into the template file
-            chunks: ['index'],
-            template: PATHS.public + '/index.html',
-            // favicon: PATHS.public + '/favicon.ico',
-            minify: stageIs('build')?HtmlWebpackMinifyOption : null
-        }),
-    ]
+    }
 };
 
 module.exports = common;
@@ -131,6 +115,9 @@ if (stageIs('start')) {
             // historyApiFallback: true
         },
         plugins: [
+            // read the template html files, inject bundles from entries
+            // and write the injected html files into output directory
+            new HtmlWebpackPlugin(htmlWebpackPluginOption),
             // support hot module replacement during development
             new webpack.HotModuleReplacementPlugin()
         ]
@@ -143,11 +130,27 @@ if (stageIs('build')) {
             // search entry points in the chunks options and extract their common modules into a single file
             // if the chunks option is not specified, all entry points will be used
             new webpack.optimize.CommonsChunkPlugin({
-                chunks: ['index', /*, 'random'*/],
+                chunks: ['index'],
                 name: 'common',
                 filename: `static/js/[name]${stageIs('start')?'':'.[hash:8]'}.js`
             }),
             new webpack.optimize.DedupePlugin(),
+            // rewrite options to add separated common chunk
+            new HtmlWebpackPlugin(Object.assign(htmlWebpackPluginOption, {
+                chunks: ['common'].concat(htmlWebpackPluginOption.chunks),
+                minify: {
+                    removeComments: true,
+                    collapseWhitespace: true,
+                    removeRedundantAttributes: true,
+                    useShortDoctype: true,
+                    removeEmptyAttributes: true,
+                    removeStyleLinkTypeAttributes: true,
+                    keepClosingSlash: true,
+                    minifyJS: true,
+                    minifyCSS: true,
+                    minifyURLs: true
+                }
+            })),
             // used to produce production code for react,
             // instead of just minifing development code since some code used
             // in development only will be minified instead of completely removed
