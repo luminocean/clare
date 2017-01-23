@@ -64,6 +64,7 @@ const common = {
                     /\.html$/,
                     /\.(js|jsx)$/,
                     /\.css$/,
+                    /\.scss$/,
                     /\.json$/
                 ],
                 loader: 'url',
@@ -77,6 +78,11 @@ const common = {
                 test: /\.css$/,
                 include: [PATHS.app, PATHS.nodeModules],
                 loaders: ['style', 'css']
+            },
+            {
+                test: /\.scss$/,
+                include: PATHS.app,
+                loaders: ['style', 'css', 'sass']
             },
             // handle js and jsx files by converting them into ES5 compatible js code
             {
@@ -95,6 +101,8 @@ const common = {
     }
 };
 
+// require.extensions['.scss'] = () => {};
+
 module.exports = common;
 
 if (stageIs('start')) {
@@ -110,6 +118,7 @@ if (stageIs('start')) {
             contentBase: PATHS.public,
             hot: true,
             inline: true,
+            quite: true,
             // stats: 'errors-only'
             // progress: true,
             // historyApiFallback: true
