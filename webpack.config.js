@@ -11,7 +11,8 @@ const stageIs = (str) => {
 const PATHS = {
     app: path.join(__dirname, 'app'),
     build: path.join(__dirname, 'build'),
-    public: path.join(__dirname, 'public')
+    public: path.join(__dirname, 'public'),
+    nodeModules: path.join(__dirname, 'node_modules')
 };
 
 const HtmlWebpackMinifyOption = {
@@ -60,40 +61,40 @@ const common = {
             }
         ],
         loaders: [
-        // load other resources to output dir
-        {
-            exclude: [
-                /\.html$/,
-                /\.(js|jsx)$/,
-                /\.css$/,
-                /\.json$/,
-                /\.svg$/
-            ],
-            loader: 'url',
-            query: {
-                limit: 10000,
-                name: `static/media/[name]${stageIs('build')?'.[hash:8]':''}.[ext]`
+            // load other resources to output dir
+            {
+                exclude: [
+                    /\.html$/,
+                    /\.(js|jsx)$/,
+                    /\.css$/,
+                    /\.json$/
+                ],
+                loader: 'url',
+                query: {
+                    limit: 10000,
+                    name: `static/media/[name]${stageIs('build')?'.[hash:8]':''}.[ext]`
+                }
+            },
+            // handle import of css files and inject them into bundled js files
+            {
+                test: /\.css$/,
+                include: [PATHS.app, PATHS.nodeModules],
+                loaders: ['style', 'css']
+            },
+            // handle js and jsx files by converting them into ES5 compatible js code
+            {
+                // supports both .js and .jsx files
+                test: /\.jsx?$/,
+                include: PATHS.app,
+                loader: 'babel',
+                query: {
+                    // need this two parameters for babel to handle es6 and react related features
+                    presets: ['es2015', 'react'],
+                    // enables cache for faster recompilation
+                    cacheDirectory: stageIs('start')
+                }
             }
-        },
-        // handle import of css files and inject them into bundled js files
-        {
-            test: /\.s?css$/,
-            include: PATHS.app,
-            loaders: ['style', 'css', 'sass']
-        },
-        // handle js and jsx files by converting them into ES5 compatible js code
-        {
-            // supports both .js and .jsx files
-            test: /\.jsx?$/,
-            include: PATHS.app,
-            loader: 'babel',
-            query: {
-                // need this two parameters for babel to handle es6 and react related features
-                presets: ['es2015', 'react'],
-                // enables cache for faster recompilation
-                cacheDirectory: TARGET === 'start'
-            }
-        }]
+        ]
     },
     plugins: [
         // read the template html files, inject bundles from entries
@@ -109,9 +110,6 @@ const common = {
         }),
     ]
 };
-
-// make node aware of scss file
-require.extensions['.scss'] = () => {};
 
 module.exports = common;
 
@@ -147,7 +145,7 @@ if (stageIs('build')) {
             new webpack.optimize.CommonsChunkPlugin({
                 chunks: ['index', /*, 'random'*/],
                 name: 'common',
-                filename: `static/js/[name]${TARGET === 'start' ? '':'.[hash:8]'}.js`
+                filename: `static/js/[name]${stageIs('start')?'':'.[hash:8]'}.js`
             }),
             new webpack.optimize.DedupePlugin(),
             // used to produce production code for react,
