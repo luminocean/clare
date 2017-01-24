@@ -1,0 +1,17 @@
+@import "../index";
+
+.treeview{
+  li {
+    background-color: $base-background-color;
+  }
+
+  ul:not(.list-group){
+    padding-left: 10px;
+  }
+
+  li.list-group-item{
+    border: 0;
+    border-radius: 0;
+    padding: 2px 0 2px 0;
+  }
+}

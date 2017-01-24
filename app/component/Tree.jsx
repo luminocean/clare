@@ -1,6 +1,8 @@
 import React from 'react'
 import TreeView from 'treeview-react-bootstrap';
 
+import './Tree.scss'
+
 export default class Tree extends React.Component {
     constructor(props) {
         super(props);
@@ -10,10 +12,17 @@ export default class Tree extends React.Component {
             {
                 text: 'a',
                 type: 'dir',
-                children: [
+                nodes: [
                     {
                         text: 'a1',
-                        type: 'file'
+                        type: 'dir',
+                        nodes: [
+                            {
+                                text: 'a11',
+                                type: 'file'
+                            }
+                        ]
+
                     },{
                         text: 'a2',
                         type: 'file'
@@ -33,7 +42,9 @@ export default class Tree extends React.Component {
     }
 
     render() {
-        return <TreeView data={this.dataToNodes(this.state.data)} selectable={false} />
+        return <TreeView
+                    data={this.dataToNodes(this.state.data)}
+                    selectable={false} />
     }
 
     dataToNodes(data = []){
@@ -50,7 +61,7 @@ export default class Tree extends React.Component {
                     text: datum.text,
                     icon: 'glyphicon glyphicon-folder-close',
                     expandedIcon: 'glyphicon glyphicon-folder-open',
-                    nodes: this.dataToNodes(datum.children)
+                    nodes: this.dataToNodes(datum.nodes)
                 }
             }
 

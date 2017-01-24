@@ -1,8 +1,14 @@
-body{
-    background-color: dimgrey;
-    font-family: Monaco，Arial, Helvetica, sans-serif;
-}
+$base-background-color: rgb(40, 42, 54);
 
-#root{
-  padding: 0 20px 0 20px;
+body {
+  background-color: $base-background-color;
+  font-family: Monaco，Arial, Helvetica, sans-serif;
+
+  #root {
+    padding: 0 20px 0 20px;
+  }
+
+  h3 {
+    color: white;
+  }
 }
