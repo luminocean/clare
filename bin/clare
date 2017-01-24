@@ -1,0 +1,15 @@
+#! /usr/bin/env bash
+
+###
+# launch clare!
+###
+
+root=`dirname $0`/..
+
+if [ ! -d ${root}/build ]; then
+    # build front-end resources
+    ${root}/bin/build
+fi
+
+# launch server
+${root}/server/clare.sh

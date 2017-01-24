@@ -1,0 +1,8 @@
+#! /usr/bin/env bash
+
+##
+# build front-end static resources
+##
+
+root=`dirname $0`/..
+${root}/node_modules/.bin/webpack --config ${root}/webpack.config.js
