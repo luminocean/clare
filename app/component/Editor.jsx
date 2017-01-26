@@ -21,20 +21,18 @@ export default class Editor extends React.Component{
         };
     }
 
-    updateCode(newCode) {
-        this.setState({
-            code: newCode,
-        });
-    }
-
     render() {
         this.state.codeMirror = (
             <CodeMirror
                 value={this.state.code}
-                onChange={this.updateCode.bind(this)}
-                options={this.state.options} />
+                options={this.state.options}
+                onChange={this.props.onChange}/>
         );
 
         return this.state.codeMirror;
     }
 }
+
+Editor.propTypes = {
+    onChange: React.PropTypes.func
+};

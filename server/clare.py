@@ -3,6 +3,7 @@ import os
 from flask import Flask, jsonify
 
 import fs
+import utility as util
 
 cwd_path = os.path.abspath('.')
 
@@ -22,11 +23,12 @@ def path_in_fs(path):
 app = Flask(__name__)
 
 
-@app.route('/items/')
-@app.route('/items/<path>')
+@app.route('/directory/')
+@app.route('/directory/<path>')
+@util.cross_domain(origin='*')
 def route_items(path='.'):
     fs_path = path_in_fs(path)
-    items = fs.list_items(fs_path)
+    items = fs.list_directory(fs_path)
     res = {
         'items': items
     }
