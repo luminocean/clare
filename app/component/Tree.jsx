@@ -9,9 +9,10 @@ export default class Tree extends React.Component {
 
     render() {
         return (
-            <div className="tree-view">
+            <div className={`tree-view ${this.props.indent ? 'tree-indent':''}`}>
                 {this.props.root.map((item) =>
-                    <TreeNode key={item.id} nodeId={item.id} name={item.name} type={item.type}/>
+                    <TreeNode key={item.id} nodeId={item.id} name={item.name}
+                              type={item.type} children={item.children}/>
                 )}
             </div>
         );
@@ -19,9 +20,11 @@ export default class Tree extends React.Component {
 }
 
 Tree.propTypes = {
-    root: React.PropTypes.array
+    root: React.PropTypes.array,
+    indent: React.PropTypes.bool
 };
 
 Tree.defaultProps = {
-    root: []
+    root: [],
+    indent: false
 };

@@ -24,7 +24,7 @@ app = Flask(__name__)
 
 
 @app.route('/directory/')
-@app.route('/directory/<path>')
+@app.route('/directory/<path:path>')
 @util.cross_domain(origin='*')
 def route_items(path='.'):
     fs_path = path_in_fs(path)

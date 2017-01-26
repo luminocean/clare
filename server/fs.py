@@ -14,6 +14,7 @@ def list_directory(dir_path):
         }
 
         item_path = os.path.join(dir_path, file_name)
+
         if os.path.isdir(item_path):
             item['type'] = 'dir'
         elif os.path.isfile(item_path):
