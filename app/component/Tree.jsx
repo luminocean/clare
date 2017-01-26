@@ -1,56 +1,27 @@
 import React from 'react'
-import TreeView from 'treeview-react-bootstrap';
-import treeStore from '../store/TreeStore';
-
+import TreeNode from './TreeNode'
 import './Tree.scss'
 
 export default class Tree extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            items: []
-        };
-
-        treeStore.addListener('TREE_DATA_UPDATED', (items) => {
-            this.setState({
-                items: items
-            });
-        });
     }
 
     render() {
-        return <TreeView
-                    data={this.item2Nodes(this.state.items)}
-                    selectable={false} />
-    }
-
-    item2Nodes(items = []){
-        return items.map((item) => {
-            if (item.type === 'file') {
-                return {
-                    text: item.name,
-                    icon: 'glyphicon glyphicon-file'
-                }
-            }
-
-            if (item.type === 'dir') {
-                return {
-                    text: item.name,
-                    icon: 'glyphicon glyphicon-folder-close',
-                    collapseIcon: 'glyphicon glyphicon-folder-open',
-                    nodes: this.item2Nodes(item.nodes)
-                }
-            }
-
-            console.error(`Unknown item type ${item.type}`);
-        });
+        return (
+            <div className="tree-view">
+                {this.props.root.map((item) =>
+                    <TreeNode key={item.id} nodeId={item.id} name={item.name} type={item.type}/>
+                )}
+            </div>
+        );
     }
 }
 
 Tree.propTypes = {
-    data: React.PropTypes.array
+    root: React.PropTypes.array
 };
 
 Tree.defaultProps = {
-    data: []
+    root: []
 };

@@ -40,6 +40,6 @@
     "react-bootstrap": "^0.30.7",
     "react-codemirror": "^0.3.0",
     "react-dom": "^15.4.2",
-    "treeview-react-bootstrap": "^0.4.6"
+    "uuid": "^3.0.1"
   }
 }

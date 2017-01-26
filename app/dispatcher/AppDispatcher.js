@@ -10,6 +10,7 @@ const match = (type, prefix) => {
 const dispatchTreeActions = (action) => {
     switch(action.type){
         case 'TREE_INIT': treeStore.init(); break;
+        case 'TREE_EXPAND_NODE': treeStore.expendDirectory(action.id); break;
     }
 };
 
@@ -18,7 +19,6 @@ const dispatcher = new Dispatcher();
 dispatcher.register((action) => {
     let type = action.type;
     switch(true){
-        // case match(type, 'EDITOR_'): dispatchEditorActions(action); break;
         case match(type, 'TREE_'): dispatchTreeActions(action); break;
     }
 });
