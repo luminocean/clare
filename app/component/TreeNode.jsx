@@ -30,10 +30,18 @@ export default class TreeNode extends React.Component {
             expanded: !this.state.expanded
         });
 
-        dispatcher.dispatch({
-            type: 'TREE_EXPAND_NODE',
-            id: this.props.nodeId
-        });
+        if(this.props.type === 'dir'){
+            dispatcher.dispatch({
+                type: 'TREE_EXPAND_NODE',
+                id: this.props.nodeId
+            });
+        }else if(this.props.type === 'file'){
+            dispatcher.dispatch({
+                type: 'EDITOR_LOAD_FILE',
+                basePath: this.props.basePath,
+                name: this.props.name
+            });
+        }
 
         if(this.props.onClick) this.props.onClick();
     }
@@ -50,6 +58,7 @@ TreeNode.propTypes = {
     nodeId: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
     type: React.PropTypes.string.isRequired,
+    basePath: React.PropTypes.string.isRequired,
     children: React.PropTypes.array,
     onClick: React.PropTypes.func
 };

@@ -2,8 +2,8 @@ import EventEmitter from 'events'
 import url from 'url'
 import uuid from 'uuid'
 import axios from 'axios';
-
 import * as config from '../configuration/config'
+import {done, logAndThrow} from '../util/util'
 
 /**
  * list items on given path
@@ -13,13 +13,14 @@ import * as config from '../configuration/config'
 const listDirectory = (basePath) => {
     const path = url.resolve(`${config.apiURL}/directory/`, basePath);
     return axios.get(path)
+        .catch(logAndThrow)
         .then((res) => res.data.items)
         // add uuid
         .then((items) => items.map((item) => {
             item.id = uuid.v4();
+            item.basePath = basePath;
             return item;
-        }))
-        .catch((e) => console.error(`List Directory on server failed: ${e}`));
+        }));
 };
 
 class TreeStore extends EventEmitter{
@@ -28,7 +29,8 @@ class TreeStore extends EventEmitter{
             // set to root
             .then((items) => this.root = items)
             // root update done
-            .then(() => this.emit('TREE_DATA_UPDATED', this.root));
+            .then(() => this.emit('TREE_DATA_UPDATED', this.root))
+            .catch(done);
     }
 
     expendDirectory(id){
@@ -40,7 +42,7 @@ class TreeStore extends EventEmitter{
         listDirectory(path).then((items) => {
             target.children = items;
             this.emit('TREE_DATA_UPDATED', this.root);
-        });
+        }).catch(done);
     }
 
     _locatePath(items, id){

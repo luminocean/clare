@@ -10,29 +10,35 @@ import 'codemirror/theme/dracula.css'
 export default class Editor extends React.Component{
     constructor(props){
         super(props);
-
-        this.state = {
-            code: "// Code Here...",
-            options: {
-                lineNumbers: true,
-                mode: "javascript",
-                theme: "dracula"
-            }
-        };
     }
 
     render() {
-        this.state.codeMirror = (
-            <CodeMirror
-                value={this.state.code}
-                options={this.state.options}
+        const option = {
+            lineNumbers: this.props.lineNumbers,
+            mode: this.props.mode,
+            theme: this.props.theme
+        };
+
+        return (
+            <CodeMirror className="editor"
+                value={this.props.text}
+                options={option}
+                viewportMargin={Infinity}
                 onChange={this.props.onChange}/>
         );
-
-        return this.state.codeMirror;
     }
 }
 
 Editor.propTypes = {
+    text: React.PropTypes.string,
+    mode: React.PropTypes.string,
+    theme: React.PropTypes.string,
+    lineNumbers: React.PropTypes.bool,
     onChange: React.PropTypes.func
+};
+
+Editor.defaultProps = {
+    lineNumbers: true,
+    mode: "javascript",
+    theme: "dracula"
 };

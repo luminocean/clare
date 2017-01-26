@@ -35,5 +35,17 @@ def route_items(path='.'):
     return jsonify(**res)
 
 
+@app.route('/file/')
+@app.route('/file/<path:path>')
+@util.cross_domain(origin='*')
+def route_file(path):
+    fs_path = path_in_fs(path)
+    text = fs.read_file(fs_path)
+    res = {
+        'text': text
+    }
+    return jsonify(**res)
+
+
 if __name__ == '__main__':
     app.run(port=4132, debug=True)

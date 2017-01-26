@@ -1,14 +1,17 @@
 import React from 'react'
-import Editor from './Editor';
+import Editor from './Editor'
 import Tree from './Tree'
 import dispatcher from '../dispatcher/AppDispatcher'
-import treeStore from '../store/TreeStore';
+import treeStore from '../store/TreeStore'
+import editorStore from '../store/EditorStore'
+import './App.scss'
 
 export default class App extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-          root: []
+            root: [], // root items for tree view
+            text: '' // text in Editor
         };
         this.setupEventListeners();
     }
@@ -23,13 +26,14 @@ export default class App extends React.Component{
     render(){
         return (
             <div>
-                <h3>Talk is cheap. Show me the code!</h3>
+                <p className="banner">Talk is cheap. Show me the code!</p>
                 <div className="row">
-                    <div className="col-sm-4">
+                    <div className="col-sm-1"></div>
+                    <div className="col-sm-2">
                         <Tree root={this.state.root}/>
                     </div>
-                    <div className="col-sm-8">
-                        <Editor />
+                    <div className="col-sm-9">
+                        <Editor text={this.state.text}/>
                     </div>
                 </div>
             </div>
@@ -42,5 +46,11 @@ export default class App extends React.Component{
                 root: root
             });
         });
+
+        editorStore.addListener('EDITOR_FILE_LOADED', (text) => {
+            this.setState({
+                text: text
+            });
+        })
     }
 }

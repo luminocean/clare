@@ -1,6 +1,10 @@
 import os
 
 
+class ResourceError(Exception):
+    pass
+
+
 def list_directory(dir_path):
     """
     List names of files or dirs under the the given dir
@@ -23,3 +27,13 @@ def list_directory(dir_path):
         items.append(item)
 
     return items
+
+
+def read_file(file_path):
+    if not os.path.isfile(file_path):
+        raise ResourceError('Requested resource is not a regular file')
+
+    with open(file_path) as f:
+        text = f.read()
+    return text
+
