@@ -1,15 +1,32 @@
 import EventEmitter from 'events'
-import {listDirectory} from '../io/TreeIO'
+import url from 'url'
+import axios from 'axios';
+
+import * as config from '../configuration/config'
+
+/**
+ * list items on given path
+ * each item looks like {name: 'NAME', type: 'TYPE'}
+ * @param basePath need to be a relative path not start with /
+ */
+const listDirectory = (basePath) => {
+    const path = url.resolve(`${config.apiURL}/directory/`, basePath);
+    return axios.get(path)
+        .then((res) => res.data.items)
+        .catch((e) => console.error(`List Directory on server failed: ${e}`));
+};
 
 class TreeStore extends EventEmitter{
     init(){
-        listDirectory('')
-            .then((items) => this.notify(items))
-            .catch((e) => console.error(`List Directory on server failed: ${e}`));
+        return listDirectory('')
+            .then((items) => this.root = items)
+            .then(() => {
+                this.notify(this.root);
+            });
     }
 
-    notify(items){
-        this.emit('TREE_DATA_UPDATED', items);
+    notify(root){
+        this.emit('TREE_DATA_UPDATED', root);
     }
 }
 

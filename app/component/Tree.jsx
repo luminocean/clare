@@ -20,11 +20,11 @@ export default class Tree extends React.Component {
 
     render() {
         return <TreeView
-                    data={this.data2Nodes(this.state.items)}
+                    data={this.item2Nodes(this.state.items)}
                     selectable={false} />
     }
 
-    data2Nodes(items = []){
+    item2Nodes(items = []){
         return items.map((item) => {
             if (item.type === 'file') {
                 return {
@@ -38,7 +38,7 @@ export default class Tree extends React.Component {
                     text: item.name,
                     icon: 'glyphicon glyphicon-folder-close',
                     collapseIcon: 'glyphicon glyphicon-folder-open',
-                    nodes: this.data2Nodes(item.nodes)
+                    nodes: this.item2Nodes(item.nodes)
                 }
             }
 
