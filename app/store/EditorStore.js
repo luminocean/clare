@@ -5,10 +5,10 @@ import * as config from '../configuration/config'
 import {done, logAndThrow} from '../util/util'
 import * as C from '../util/constants'
 
-const fetchText = (basePath) => {
-    const path = url.resolve(`${config.apiURL}/file/`, basePath);
+const fetchText = (path) => {
+    const addr = url.resolve(`${config.apiURL}/file/`, path);
 
-    return axios.get(path)
+    return axios.get(addr)
         .catch(logAndThrow)
         .then((res) => res.data.text);
 };

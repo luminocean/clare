@@ -1,7 +1,6 @@
 import EventEmitter from 'events'
 import url from 'url'
-// import path from 'path'
-import uuid from 'uuid'
+import path from 'path'
 import axios from 'axios';
 import * as config from '../configuration/config'
 import {done, logAndThrow} from '../util/util'
@@ -13,15 +12,13 @@ import * as C from '../util/constants'
  * @param basePath need to be a relative path not start with /
  */
 const listDirectory = (basePath) => {
-    const path = url.resolve(`${config.apiURL}/directory/`, basePath);
-    return axios.get(path)
+    const addr = url.resolve(`${config.apiURL}/directory/`, basePath);
+    return axios.get(addr)
         .catch(logAndThrow)
         .then((res) => res.data.items)
-        // add uuid
+        // add full path which can be used as an unique id
         .then((items) => items.map((item) => {
-            // let path = path.join(basePath, item.name);
-            item.id = uuid.v4();
-            item.basePath = basePath;
+            item.path = path.join(basePath, item.name);
             return item;
         }));
 };
@@ -29,17 +26,15 @@ const listDirectory = (basePath) => {
 class TreeStore extends EventEmitter{
     init(){
         return listDirectory('')
-            // set to root
+            // set root
             .then((items) => this.root = items)
             // root update done
             .then(() => this.emit(C.TREE_DATA_UPDATED, this.root))
             .catch(done);
     }
 
-    expendDirectory(id){
-        let names = this._locatePath(this.root, id);
-        let path = names.join('/');
-        let target = this._locateItem(this.root, id);
+    expendDirectory(path){
+        let target = this._locateItem(this.root, path);
 
         // fetch sub items
         listDirectory(path).then((items) => {
@@ -48,28 +43,13 @@ class TreeStore extends EventEmitter{
         }).catch(done);
     }
 
-    _locatePath(items, id){
+    _locateItem(items, path){
         for(let i=0; i<items.length; i++){
             let item = items[i];
 
-            if( item.id === id ) return [item.name];
+            if( item.path === path ) return item;
             if( item.children && item.children.length ){
-                let descendantNames = this._locatePath(item.children, id);
-                if( descendantNames.length > 0 ){
-                    return [item.name].concat(descendantNames);
-                }
-            }
-        }
-        return [];
-    }
-
-    _locateItem(items, id){
-        for(let i=0; i<items.length; i++){
-            let item = items[i];
-
-            if( item.id === id ) return item;
-            if( item.children && item.children.length ){
-                let res = this._locateItem(item.children, id);
+                let res = this._locateItem(item.children, path);
                 if( res !== null ) return res;
             }
         }

@@ -1,6 +1,7 @@
 import React from 'react'
 import dispatcher from '../dispatcher/AppDispatcher'
 import Tree from './Tree'
+import * as C from '../util/constants'
 import './TreeNode.scss'
 
 export default class TreeNode extends React.Component {
@@ -33,14 +34,13 @@ export default class TreeNode extends React.Component {
         ////// DISPATCH ACTIONS //////
         if(this.props.type === 'dir'){
             dispatcher.dispatch({
-                type: 'TREE_EXPAND_NODE',
-                id: this.props.nodeId
+                type: C.TREE_EXPAND_NODE,
+                path: this.props.path
             });
         }else if(this.props.type === 'file'){
             dispatcher.dispatch({
-                type: 'EDITOR_OPEN_FILE',
-                basePath: this.props.basePath,
-                name: this.props.name
+                type: C.EDITOR_OPEN_FILE,
+                path: this.props.path
             });
         }
         ////// DISPATCH DONE //////
@@ -57,10 +57,9 @@ export default class TreeNode extends React.Component {
 }
 
 TreeNode.propTypes = {
-    nodeId: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
     type: React.PropTypes.string.isRequired,
-    basePath: React.PropTypes.string.isRequired,
+    path: React.PropTypes.string.isRequired,
     children: React.PropTypes.array,
     onClick: React.PropTypes.func
 };

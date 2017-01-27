@@ -11,8 +11,8 @@ export default class Tree extends React.Component {
         return (
             <div className={`tree-view ${this.props.indent ? 'tree-indent':''}`}>
                 {this.props.root.map((item) =>
-                    <TreeNode key={item.id} nodeId={item.id} name={item.name}
-                              type={item.type} children={item.children} basePath={item.basePath}/>
+                    <TreeNode key={item.path} name={item.name}
+                              type={item.type} children={item.children} path={item.path}/>
                 )}
             </div>
         );
