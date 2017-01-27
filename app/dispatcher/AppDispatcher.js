@@ -2,6 +2,7 @@ import {Dispatcher} from 'flux'
 import path from 'path'
 import treeStore from '../store/TreeStore'
 import editorStore from '../store/EditorStore'
+import * as C from '../util/constants'
 
 const match = (type, prefix) => {
     return type.startsWith(prefix);
@@ -10,14 +11,14 @@ const match = (type, prefix) => {
 // const dispatchEditorActions = (action) => {return};
 const dispatchTreeActions = (action) => {
     switch(action.type){
-        case 'TREE_INIT': treeStore.init(); break;
-        case 'TREE_EXPAND_NODE': treeStore.expendDirectory(action.id); break;
+        case C.TREE_INIT: treeStore.init(); break;
+        case C.TREE_EXPAND_NODE: treeStore.expendDirectory(action.id); break;
     }
 };
 
 const dispatchEditorActions = (action) => {
     switch(action.type) {
-        case 'EDITOR_LOAD_FILE': editorStore.loadFile(path.join(action.basePath, action.name)); break;
+        case C.EDITOR_OPEN_FILE: editorStore.openFile(path.join(action.basePath, action.name)); break;
     }
 };
 
@@ -26,8 +27,8 @@ const dispatcher = new Dispatcher();
 dispatcher.register((action) => {
     let type = action.type;
     switch(true){
-        case match(type, 'TREE_'): dispatchTreeActions(action); break;
-        case match(type, 'EDITOR_'): dispatchEditorActions(action); break;
+        case match(type, C.TREE_): dispatchTreeActions(action); break;
+        case match(type, C.EDITOR_): dispatchEditorActions(action); break;
     }
 });
 

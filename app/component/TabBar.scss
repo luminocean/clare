@@ -1,0 +1,12 @@
+$tab-height: 25px;
+$tab-padding: 10px;
+
+.tab-bar{
+  color: wheat;
+
+  .tab{
+    display: inline-block;
+    height: $tab-height;
+    padding-right: $tab-padding;
+  }
+}

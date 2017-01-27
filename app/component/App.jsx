@@ -4,6 +4,7 @@ import Tree from './Tree'
 import dispatcher from '../dispatcher/AppDispatcher'
 import treeStore from '../store/TreeStore'
 import editorStore from '../store/EditorStore'
+import * as C from '../util/constants'
 import './App.scss'
 
 export default class App extends React.Component{
@@ -11,16 +12,15 @@ export default class App extends React.Component{
         super(props);
         this.state = {
             root: [], // root items for tree view
+            tabs: [], // tab data in tab bar
             text: '' // text in Editor
         };
         this.setupEventListeners();
     }
 
     componentDidMount(){
-        // init tree view
-        dispatcher.dispatch({
-            type: 'TREE_INIT'
-        });
+        // init the tree view once mounted
+        dispatcher.dispatch({type: C.TREE_INIT});
     }
 
     render(){
@@ -33,7 +33,7 @@ export default class App extends React.Component{
                         <Tree root={this.state.root}/>
                     </div>
                     <div className="col-sm-9">
-                        <Editor text={this.state.text}/>
+                        <Editor tabs={this.state.tabs} text={this.state.text}/>
                     </div>
                 </div>
             </div>
@@ -41,16 +41,8 @@ export default class App extends React.Component{
     }
 
     setupEventListeners(){
-        treeStore.addListener('TREE_DATA_UPDATED', (root) => {
-            this.setState({
-                root: root
-            });
-        });
-
-        editorStore.addListener('EDITOR_FILE_LOADED', (text) => {
-            this.setState({
-                text: text
-            });
-        })
+        treeStore.addListener(C.TREE_DATA_UPDATED, (root) => this.setState({root: root}));
+        editorStore.addListener(C.EDITOR_TEXT_LOADED, (path, text) => this.setState({text: text}));
+        editorStore.addListener(C.EDITOR_TAB_UPDATED, (tabs) => this.setState({tabs: tabs}));
     }
 }

@@ -1,9 +1,11 @@
 import EventEmitter from 'events'
 import url from 'url'
+// import path from 'path'
 import uuid from 'uuid'
 import axios from 'axios';
 import * as config from '../configuration/config'
 import {done, logAndThrow} from '../util/util'
+import * as C from '../util/constants'
 
 /**
  * list items on given path
@@ -17,6 +19,7 @@ const listDirectory = (basePath) => {
         .then((res) => res.data.items)
         // add uuid
         .then((items) => items.map((item) => {
+            // let path = path.join(basePath, item.name);
             item.id = uuid.v4();
             item.basePath = basePath;
             return item;
@@ -29,7 +32,7 @@ class TreeStore extends EventEmitter{
             // set to root
             .then((items) => this.root = items)
             // root update done
-            .then(() => this.emit('TREE_DATA_UPDATED', this.root))
+            .then(() => this.emit(C.TREE_DATA_UPDATED, this.root))
             .catch(done);
     }
 
@@ -41,7 +44,7 @@ class TreeStore extends EventEmitter{
         // fetch sub items
         listDirectory(path).then((items) => {
             target.children = items;
-            this.emit('TREE_DATA_UPDATED', this.root);
+            this.emit(C.TREE_DATA_UPDATED, this.root);
         }).catch(done);
     }
 

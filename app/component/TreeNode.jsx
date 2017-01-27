@@ -30,6 +30,7 @@ export default class TreeNode extends React.Component {
             expanded: !this.state.expanded
         });
 
+        ////// DISPATCH ACTIONS //////
         if(this.props.type === 'dir'){
             dispatcher.dispatch({
                 type: 'TREE_EXPAND_NODE',
@@ -37,11 +38,12 @@ export default class TreeNode extends React.Component {
             });
         }else if(this.props.type === 'file'){
             dispatcher.dispatch({
-                type: 'EDITOR_LOAD_FILE',
+                type: 'EDITOR_OPEN_FILE',
                 basePath: this.props.basePath,
                 name: this.props.name
             });
         }
+        ////// DISPATCH DONE //////
 
         if(this.props.onClick) this.props.onClick();
     }

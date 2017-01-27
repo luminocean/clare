@@ -2,6 +2,7 @@ import React from 'react'
 import CodeMirror from 'react-codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/mode/javascript/javascript'
+import TabBar from './TabBar'
 import './Editor.scss'
 
 // theme
@@ -20,16 +21,17 @@ export default class Editor extends React.Component{
         };
 
         return (
-            <CodeMirror className="editor"
-                value={this.props.text}
-                options={option}
-                viewportMargin={Infinity}
-                onChange={this.props.onChange}/>
+            <div>
+                <TabBar tabs={this.props.tabs}/>
+                <CodeMirror className="editor" value={this.props.text} options={option}
+                            viewportMargin={Infinity} onChange={this.props.onChange}/>
+            </div>
         );
     }
 }
 
 Editor.propTypes = {
+    tabs: React.PropTypes.array,
     text: React.PropTypes.string,
     mode: React.PropTypes.string,
     theme: React.PropTypes.string,
