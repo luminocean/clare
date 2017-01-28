@@ -1,22 +1,42 @@
 $tab-height: 30px;
-$tab-padding: 5px 20px 5px 5px;
-$tab-background-color: rgb(60, 62, 63);
-$tab-focused-background-color: rgb(81, 86, 88);
+$tab-padding: 5px 5px 5px 5px;
 $tab-border: 1px solid black;
+$close-btn-padding: 0 2px 0 2px;
 
 .tab-bar{
-  color: wheat;
-
   .tab{
-    background-color: $tab-background-color;
+    background-color: rgb(60, 62, 63);
     display: inline-block;
     height: $tab-height;
     padding: $tab-padding;
     line-height: $tab-height * 0.7;
-    border: $tab-border
+    border: $tab-border;
+
+    .tab-name{
+      color: wheat;
+    }
+
+    .close-btn{
+      color: transparent;
+      padding: $close-btn-padding;
+    }
+
+    .changed{
+      color: rgb(98, 150, 186);
+    }
   }
 
   .tab.focused{
-    background-color: $tab-focused-background-color;
+    background-color: rgb(81, 86, 88);
+  }
+
+  .tab:hover{
+    .close-btn{
+      color: black;
+    }
+
+    .close-btn:hover{
+      color: grey;
+    }
   }
 }
