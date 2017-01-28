@@ -42,6 +42,11 @@ class EditorStore extends EventEmitter{
         this._loadText(path);
     }
 
+    /**
+     * open a tab in tab bar
+     * @param path
+     * @private
+     */
     _openTab(path){
         let index = -1;
         for(let i=0; i<this.tabs.length; i++){
@@ -58,6 +63,7 @@ class EditorStore extends EventEmitter{
         if(index === -1){
             let tab = {
                 path: path,
+                // name: path, // name is the same as path before simplification
                 focused: true
             };
             this.tabs.push(tab);
@@ -68,14 +74,65 @@ class EditorStore extends EventEmitter{
             tab.focused = true;
         }
 
+        this._setTabNames(this.tabs);
         this.emit(C.EDITOR_TAB_UPDATED, this.tabs);
     }
 
+    /**
+     * load text into editor
+     * @param path
+     * @private
+     */
     _loadText(path){
-        // load text into editor
         fetchText(path).then((text) => {
             this.emit(C.EDITOR_TEXT_LOADED, path, text);
         }).catch(done);
+    }
+
+    _setTabNames(tabs){
+        let root = new Map();
+
+        tabs.forEach((tab) => {
+            let lastMap = root;
+            let splits = tab.path.split('/').reverse();
+            splits.forEach((split) => {
+                // add a new node
+                if(!lastMap.get(split)){
+                    let newNode = {
+                        split: split,
+                        count: 1,
+                        children: new Map(),
+                        lastRelatedTab: tab
+                    };
+                    lastMap.set(split, newNode);
+                }else{
+                    lastMap.get(split).count += 1;
+                }
+
+                // step in
+                lastMap = lastMap.get(split).children;
+            });
+
+            // iterate next tab
+            lastMap = root;
+        });
+
+        const setTabNames = (map, suffix) => {
+            let nodes = [...map.values()];
+            for(let i=0; i<nodes.length; i++){
+                let {split, count, children, lastRelatedTab} = nodes[i];
+
+                let name = split + (suffix ? '/'+suffix :'');
+                if(count === 1){
+                    lastRelatedTab.name = name;
+                }else{
+                    setTabNames(children, name);
+                }
+            }
+        };
+        setTabNames(root);
+
+        return tabs;
     }
 }
 

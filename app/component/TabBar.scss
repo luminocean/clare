@@ -1,12 +1,22 @@
-$tab-height: 25px;
-$tab-padding: 10px;
+$tab-height: 30px;
+$tab-padding: 5px 20px 5px 5px;
+$tab-background-color: rgb(60, 62, 63);
+$tab-focused-background-color: rgb(81, 86, 88);
+$tab-border: 1px solid black;
 
 .tab-bar{
   color: wheat;
 
   .tab{
+    background-color: $tab-background-color;
     display: inline-block;
     height: $tab-height;
-    padding-right: $tab-padding;
+    padding: $tab-padding;
+    line-height: $tab-height * 0.7;
+    border: $tab-border
+  }
+
+  .tab.focused{
+    background-color: $tab-focused-background-color;
   }
 }

@@ -6,7 +6,7 @@ export default class TabBar extends React.Component{
         return (
             <div className="tab-bar">
                 {this.props.tabs.map((tab) => (
-                    <span className="tab" key={tab.path}>{tab.path}</span>
+                    <span className={`tab ${tab.focused?'focused':''}`} key={tab.path}>{tab.name}</span>
                 ))}
             </div>
         );
