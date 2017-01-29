@@ -40,6 +40,10 @@ export function closeFile(path){
     }
 }
 
-export function textChanged(path, text){
-    console.log(`text changed: ${path} - ${text}`);
+export function textModified(path, text){
+    return {
+        type: C.EDITOR_TEXT_MODIFIED,
+        path: path,
+        text: text
+    }
 }

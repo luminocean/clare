@@ -10,6 +10,11 @@ export const dup = (object, newObj) => {
     return Object.assign({}, object, newObj);
 };
 
+export const stopEvent = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+};
+
 class Imm{
     // duplicate an object and optionally merge ne attributes into it
     dup(object, newObj){
@@ -46,9 +51,13 @@ class Imm{
         ];
     }
 
+    limit(arr, maxLen){
+        if(arr.length <= maxLen) return arr;
+        return arr.slice(0, maxLen);
+    }
+
     deepCopyJSON(json){
         return JSON.parse(JSON.stringify(json));
     }
 }
-
 export const imm = new Imm();

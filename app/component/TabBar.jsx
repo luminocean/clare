@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import * as actions from '../action/editorAction'
+import {stopEvent} from '../util/util'
 import './TabBar.scss'
 
 class TabBar extends React.Component{
@@ -13,12 +14,12 @@ class TabBar extends React.Component{
             <div className="tab-bar">
                 {this.props.buffers.map((buffer) => (
                     <span className={`tab ${buffer.focused ? 'focused' : ''}`} key={buffer.path}
-                          onClick={() => this.props.onClick(buffer.path)}>
-                        <span className={`tab-name ${buffer.changed?'changed':''}`}>
+                          onClick={(e) => {stopEvent(e); this.props.onClick(buffer.path)}}>
+                        <span className={`tab-name ${buffer.modified?'changed':''}`}>
                             {buffer.name}
                         </span>
                         <span className="close-btn glyphicon glyphicon-remove"
-                              onClick={() => this.props.onClose(buffer.path)} />
+                              onClick={(e) => {stopEvent(e); this.props.onClose(buffer.path)}} />
                     </span>
                 ))}
             </div>

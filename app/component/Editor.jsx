@@ -18,21 +18,17 @@ class Editor extends React.Component{
             theme: this.props.theme
         };
 
+        let focusedBuffer = this.props.buffers.find((b) => b.focused);
+
         return (
             <div>
                 <TabBar onClose={this.props.onClose} buffers={this.props.buffers}/>
 
                 <CodeMirror className="editor" options={option}
-                            viewportMargin={Infinity} onChange={this.props.onChange}
-                            value={this._text(this.props.buffers)} />
+                            viewportMargin={Infinity} onChange={(text) => this.props.onChange(focusedBuffer.path, text)}
+                            value={focusedBuffer?focusedBuffer.text:''} />
             </div>
         );
-    }
-
-    // get text from the focused buffer
-    _text(buffers){
-        let focusedBuffer = buffers.find((b) => b.focused);
-        return focusedBuffer ? (focusedBuffer.text || ''): ''
     }
 }
 
@@ -52,10 +48,10 @@ Editor.defaultProps = {
     theme: "dracula"
 };
 
-const dispatcher = (dispatch, props) => {
+const dispatcher = (dispatch) => {
     return {
-        onChange: (text) => {
-            dispatch(actions.textChanged(props.path, text))
+        onChange: (path, text) => {
+            dispatch(actions.textModified(path, text));
         }
     }
 };
