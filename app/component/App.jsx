@@ -2,7 +2,8 @@ import React from 'react'
 import {connect} from 'react-redux'
 import Editor from './Editor'
 import Tree from './Tree'
-import './App.scss'
+import ControlBar from './ContolBar'
+import './style/App.scss'
 
 class App extends React.Component{
     render(){
@@ -15,7 +16,10 @@ class App extends React.Component{
                         <Tree root={this.props.tree}/>
                     </div>
                     <div className="col-sm-9">
-                        <Editor buffers={this.props.buffers}/>
+                        <div className="row">
+                            <ControlBar />
+                            <Editor buffers={this.props.buffers}/>
+                        </div>
                     </div>
                 </div>
             </div>

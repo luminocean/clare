@@ -3,4 +3,4 @@
 dir=`dirname $0`
 source ${dir}/../venv/bin/activate
 
-pip install flask
+pip install flask flask-cors

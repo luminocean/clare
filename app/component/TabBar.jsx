@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import * as actions from '../action/editorAction'
 import {stopEvent} from '../util/util'
-import './TabBar.scss'
+import './style/TabBar.scss'
 
 class TabBar extends React.Component{
     constructor(props){

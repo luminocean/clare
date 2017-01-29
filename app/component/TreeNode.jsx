@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import Tree from './Tree'
 import { treeNodeClicked } from '../action/treeAction'
-import './TreeNode.scss'
+import './style/TreeNode.scss'
 
 class TreeNode extends React.Component {
     render(){

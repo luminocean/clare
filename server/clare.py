@@ -1,9 +1,10 @@
 import os
 
-from flask import Flask, jsonify
+import json
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 import fs
-import utility as util
 
 cwd_path = os.path.abspath('.')
 
@@ -21,11 +22,11 @@ def path_in_fs(path):
     return p
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route('/directory/')
 @app.route('/directory/<path:path>')
-@util.cross_domain(origin='*')
 def route_items(path='.'):
     fs_path = path_in_fs(path)
     items = fs.list_directory(fs_path)
@@ -35,16 +36,29 @@ def route_items(path='.'):
     return jsonify(**res)
 
 
-@app.route('/file/')
-@app.route('/file/<path:path>')
-@util.cross_domain(origin='*')
-def route_file(path):
+@app.route('/file/', methods=['GET', 'POST'])
+@app.route('/file/<path:path>', methods=['GET', 'POST'])
+def route__file(path):
     fs_path = path_in_fs(path)
-    text = fs.read_file(fs_path)
-    res = {
-        'text': text
-    }
-    return jsonify(**res)
+    print fs_path
+
+    if request.method == 'GET':
+        text = fs.read_file(fs_path)
+        res = {
+            'text': text
+        }
+        return jsonify(**res)
+    elif request.method == 'POST':
+        requset_data = json.loads(request.data)
+        path = requset_data['path']
+        text = requset_data['text']
+
+        fs_path = path_in_fs(path)
+        fs.write_file(fs_path, text)
+        res = {
+            'response': 'OK'
+        }
+        return jsonify(**res)
 
 
 if __name__ == '__main__':

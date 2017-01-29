@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import TreeNode from './TreeNode'
-import './Tree.scss'
+import './style/Tree.scss'
 
 class Tree extends React.Component {
     render() {
