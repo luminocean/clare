@@ -1,6 +1,16 @@
 $font-size: 1em;
 
-.CodeMirror{
-  font-size: $font-size;
-  height: 100%;
+.editor{
+  .control{
+    padding: 5px 0 5px 0;
+    .icon{
+      color: whitesmoke;
+      padding: 0 10px 0 0;
+    }
+  }
+
+  .CodeMirror{
+    font-size: $font-size;
+    height: 100%;
+  }
 }

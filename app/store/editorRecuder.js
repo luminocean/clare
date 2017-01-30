@@ -82,11 +82,8 @@ const textModified = (state, path, text) => {
     let ns = imm.dup(state);
     ns.buffers = ns.buffers.map((buffer) => {
         if(buffer.path !== path) return buffer;
-        let newBuffer = imm.dup(buffer, {
-            text: text
-        });
-
-        return imm.dup(newBuffer, {
+        return imm.dup(buffer, {
+            text: text,
             modified: true
         });
     });

@@ -21,17 +21,20 @@ class Editor extends React.Component{
         let focusedBuffer = this.props.buffers.find((b) => b.focused);
 
         return (
-            <div>
+            <div className="editor">
                 <TabBar onClose={this.props.onClose} buffers={this.props.buffers}/>
 
-                <div className="editor-control">
-                    <span className="glyphicon glyphicon-floppy-disk" onClick={() => {
+                <div className="control">
+                    <span className="icon glyphicon glyphicon-floppy-disk" onClick={() => {
                         this.props.onSave(focusedBuffer.path, this.cm.getCodeMirror().doc.getValue())}}/>
+                    <span className="icon glyphicon glyphicon-chevron-left" />
+                    <span className="icon glyphicon glyphicon-chevron-right" />
+                    <span className="icon glyphicon glyphicon-search" />
                 </div>
 
                 <CodeMirror className="editor" options={option} ref={(cm) => this.cm = cm}
-                            viewportMargin={Infinity} onChange={(text) => this.props.onChange(focusedBuffer.path, text)}
-                            value={focusedBuffer?focusedBuffer.text:''} />
+                            viewportMargin={Infinity} value={focusedBuffer?focusedBuffer.text:''}
+                            onChange={(text) => this.props.onChange(focusedBuffer.path, text)}/>
             </div>
         );
     }
